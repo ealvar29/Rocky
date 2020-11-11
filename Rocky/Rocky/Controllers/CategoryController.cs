@@ -22,5 +22,13 @@ namespace Rocky.Controllers
             IEnumerable<Category> objList = _db.Category;
             return View(objList);
         }
+        
+        
+        //Get - Create method for controller
+        public IActionResult Create()
+        {
+            IEnumerable<Category> objList = _db.Category;
+            return View();
+        }
     }
 }
