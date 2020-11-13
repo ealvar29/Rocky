@@ -30,5 +30,15 @@ namespace Rocky.Controllers
             IEnumerable<Category> objList = _db.Category;
             return View();
         }
+
+        //POST - Create method for controller
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Category obj)
+        {
+            _db.Category.Add(obj); 
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
