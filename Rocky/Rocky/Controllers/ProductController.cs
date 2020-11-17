@@ -47,35 +47,35 @@ namespace Rocky.Controllers
             }
         }
 
-        //POST - Upsert
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Category obj)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.Category.Add(obj); 
-                _db.SaveChanges();   
-                return RedirectToAction("Index");
-            }
-
-            return View(obj);
-        }
-
-        //Get - Delete
-        public IActionResult Delete(int id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            var obj = _db.Category.Find(id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
-            return View(obj);
-        }
+        // //POST - Upsert
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public IActionResult Upsert(Category obj)
+        // {
+        //     if (ModelState.IsValid)
+        //     {
+        //         _db.Category.Add(obj); 
+        //         _db.SaveChanges();   
+        //         return RedirectToAction("Index");
+        //     }
+        //
+        //     return View(obj);
+        // }
+        //
+        // //Get - Delete
+        // public IActionResult Delete(int id)
+        // {
+        //     if (id == null || id == 0)
+        //     {
+        //         return NotFound();
+        //     }
+        //     var obj = _db.Category.Find(id);
+        //     if (obj == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     return View(obj);
+        // }
 
         //POST - Delete method for controller
         [HttpPost]
