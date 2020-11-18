@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Rocky.Data;
 using Rocky.Models;
+using Rocky.Models.ViewModels;
 
 namespace Rocky.Controllers
 {
@@ -30,20 +32,29 @@ namespace Rocky.Controllers
         //Get - Upsert - Insert and Update
         public IActionResult Upsert(int? id)
         {
-            Product product = new Product();
+            ProductViewModel ProductVM = new ProductViewModel
+            {
+                Product = new Product(),
+                CategorySelectList = _db.Category.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                })
+            };
+
             if (id == null)
             {
                 //This is for Create
-                return View(product);
+                return View(ProductVM);
             }
             else
             {
-                product = _db.Product.Find(id);
-                if (product == null)
+                ProductVM.Product = _db.Product.Find(id);
+                if (ProductVM.Product == null)
                 {
                     return NotFound();
                 }
-                return View(product);
+                return View(ProductVM);
             }
         }
 
