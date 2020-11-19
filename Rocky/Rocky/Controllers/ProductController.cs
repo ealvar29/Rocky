@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rocky.Data;
@@ -13,9 +15,11 @@ namespace Rocky.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public ProductController(ApplicationDbContext db)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(ApplicationDbContext db, IWebHostEnvironment WebHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = WebHostEnvironment;
         }
         
         public IActionResult Index()
@@ -58,20 +62,53 @@ namespace Rocky.Controllers
             }
         }
 
-        // //POST - Upsert
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public IActionResult Upsert(Category obj)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         _db.Category.Add(obj); 
-        //         _db.SaveChanges();   
-        //         return RedirectToAction("Index");
-        //     }
-        //
-        //     return View(obj);
-        // }
+        //POST - Upsert
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(ProductViewModel productViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var files = HttpContext.Request.Form.Files;
+                string webRootPath = _webHostEnvironment.WebRootPath;
+
+                if (productViewModel.Product.Id == 0)
+                {
+                    //Creating
+                    string upload = webRootPath + WC.ImagePath;
+                    string filename = Guid.NewGuid().ToString();
+                    string extension = Path.GetExtension(files[0].FileName);
+
+                    using (var fileStream = new FileStream(Path.Combine(upload, filename + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+
+                    productViewModel.Product.Image = filename + extension;
+                    _db.Product.Add(productViewModel.Product);
+                }
+                else
+                {
+                    //Editing 
+                    var objFromDb = _db.Product.FirstOrDefault(m => m.Id == productViewModel.Product.Id);
+                    if (files.Count > 0)
+                    {
+                        string upload = webRootPath + WC.ImagePath;
+                        string filename = Guid.NewGuid().ToString();
+                        string extension = Path.GetExtension(files[0].FileName);
+
+                        using (var fileStream = new FileStream(Path.Combine(upload, filename + extension), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStream);
+                        }
+                    }
+                }
+                _db.SaveChanges();   
+                return RedirectToAction("Index");
+            }
+        
+            return View(productViewModel);
+        }
         //
         // //Get - Delete
         // public IActionResult Delete(int id)
