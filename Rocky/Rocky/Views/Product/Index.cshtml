@@ -25,7 +25,10 @@
                     Price
                 </th>
                 <th>
-                        
+                     Category   
+                </th>
+                <th>
+                     Application Type
                 </th>
             </tr>
             </thead>
@@ -35,6 +38,8 @@
                 <tr>
                     <td width="50%">@obj.Name</td>
                     <td width="50%">@obj.Price</td>
+                    <td width="50%">@obj.Category</td>
+                    <td width="50%">@obj.ApplicationType</td>
                     <td class="text-center">
                         <div class="w-100 btn-group" role="group">
                             <a asp-route-Id="@obj.Id" asp-action="Upsert" class="btn btn-primary mx-2">
@@ -43,7 +48,7 @@
                             <a asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
-                            
+
                         </div>
                     </td>
                 </tr>

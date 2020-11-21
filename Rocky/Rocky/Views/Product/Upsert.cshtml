@@ -21,21 +21,21 @@
                         <label asp-for="Product.Name"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Name" class="form-control"/>
+                        <input asp-for="Product.Name" class="form-control" />
                         <span asp-validation-for="Product.Name" class="text-danger"></span>
                     </div>
                 </div>
-                
+
                 <div class="form-group row">
                     <div class="col-4">
                         <label asp-for="Product.Price"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Product.Price" class="form-control"/>
+                        <input asp-for="Product.Price" class="form-control" />
                         <span asp-validation-for="Product.Price" class="text-danger"></span>
                     </div>
                 </div>
-                
+
                 <div class="form-group row">
                     <div class="col-4">
                         <label asp-for="Product.Description"></label>
@@ -45,13 +45,13 @@
                         <span asp-validation-for="Product.Description" class="text-danger"></span>
                     </div>
                 </div>
-                
+
                 <div class="form-group row">
                     <div class="col-4">
                         Image
                     </div>
                     <div class="col-8">
-                        <input type="file" name="files" id="uploadBox" multiple class="form-control"/>
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
                     </div>
                 </div>
 
@@ -66,7 +66,19 @@
                         <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                     </div>
                 </div>
-                
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.ApplicationTypeId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Product.ApplicationTypeId" asp-items="@Model.ApplicationSelectList" class="form-control">
+                            <option disabled selected>--Select Application--</option>
+                        </select>
+                        <span asp-validation-for="Product.ApplicationTypeId" class="text-danger"></span>
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <div class="col-8 offset-4 row">
 
@@ -74,12 +86,12 @@
                             @if (Model.Product.Id != 0)
                             {
                                 //Update
-                                <input type="submit" class="btn btn-info w-100" value="Update"/>
+                                <input type="submit" class="btn btn-info w-100" value="Update" />
                             }
                             else
                             {
                                 //Create
-                                <input type="submit" onclick="return validateInput()" class="btn btn-info w-100" value="Create"/>
+                                <input type="submit" onclick="return validateInput()" class="btn btn-info w-100" value="Create" />
                             }
                         </div>
                         <div class="col">
@@ -91,7 +103,7 @@
             <div class="col-4">
                 @if (Model.Product.Id != 0)
                 {
-                    <img src="@WC.ImagePath@Model.Product.Image" width="100%" style="border-radius: 5px; border: 1px solid #bbbbbb;"/>                    
+                    <img src="@WC.ImagePath@Model.Product.Image" class="w-100" style="border-radius: 5px; border: 1px solid #bbbbbb;"/>                    
                 }
             </div>
         </div>
