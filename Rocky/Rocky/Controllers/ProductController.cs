@@ -34,7 +34,7 @@ namespace Rocky.Controllers
         }
         
         
-        //Get - Upsert - Insert and Update
+        //Get - Gets Upsert View - Update and Insert
         public IActionResult Upsert(int? id)
         {
             ProductViewModel ProductVM = new ProductViewModel
@@ -121,38 +121,54 @@ namespace Rocky.Controllers
                 _db.SaveChanges();   
                 return RedirectToAction("Index");
             }
-        
+
+            productViewModel.CategorySelectList = _db.Category.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
             return View(productViewModel);
         }
-        //
-        // //Get - Delete
-        // public IActionResult Delete(int id)
-        // {
-        //     if (id == null || id == 0)
-        //     {
-        //         return NotFound();
-        //     }
-        //     var obj = _db.Category.Find(id);
-        //     if (obj == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     return View(obj);
-        // }
+        
+        //Get - Gets Delete View
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Product product = _db.Product.Include(m => m.Category).FirstOrDefault(n => n.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
 
         //POST - Delete method for controller
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.Category.Find(id);
+            var obj = _db.Product.Find(id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Category.Remove(obj); 
-            _db.SaveChanges();   
-            return RedirectToAction("Index");
+            
+            string upload = _webHostEnvironment.WebRootPath + WC.ImagePath;
+            var oldFile = Path.Combine(upload, obj.Image);
+
+            if (System.IO.File.Exists(oldFile))
+            {
+                System.IO.File.Delete(oldFile);
+            }
+
+            _db.Product.Remove(obj);
+            _db.SaveChanges();
+           return RedirectToAction("Index");
         }
     }
 }
