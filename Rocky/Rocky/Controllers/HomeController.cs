@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rocky.Data;
 using Rocky.Models;
@@ -25,9 +26,10 @@ namespace Rocky.Controllers
         {
             HomeViewModel homeViewModel = new HomeViewModel
             {
-                
-            }
-            return View();
+                Products = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType),
+                Categories = _db.Category
+            };
+            return View(homeViewModel);
         }
 
         public IActionResult Privacy()
