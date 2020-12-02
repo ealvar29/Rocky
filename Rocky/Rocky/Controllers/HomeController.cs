@@ -31,6 +31,17 @@ namespace Rocky.Controllers
             };
             return View(homeViewModel);
         }
+        
+        public IActionResult Details(int id)
+        {
+            DetailsViewModel DetailsVM = new DetailsViewModel()
+            {
+                Product = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType)
+                    .Where(u => u.Id == id).FirstOrDefault(),
+                ExistsInCart = false
+            };
+            return View(DetailsVM);
+        }
 
         public IActionResult Privacy()
         {
