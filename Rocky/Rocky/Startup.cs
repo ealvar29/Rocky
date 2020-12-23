@@ -38,6 +38,7 @@ namespace Rocky
                 Options.Cookie.HttpOnly = true;
                 Options.Cookie.IsEssential = true;
             });
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
         }
 
